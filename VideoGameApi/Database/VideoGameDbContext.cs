@@ -18,18 +18,40 @@ namespace VideoGameApi.Database
 
 
         public DbSet<VideoGame> VideoGames { get; set; }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                var configuration = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json")
-                    .Build();
+            base.OnModelCreating(modelBuilder);
 
-                string connectionString = configuration.GetConnectionString("DefaultConnection");
-                optionsBuilder.UseSqlServer(connectionString);
+            modelBuilder.Entity<VideoGame>().HasData(
+              
+            new VideoGame
+            {
+                Id = 1,
+                Title = "Spider-Man 2",
+                Platform = "PS5",
+                Developer = "Insomniac Games",
+                Publisher = "Sony Interactive Entertainment"
+            },
+
+            new VideoGame
+            {
+                Id = 2,
+                Title = "The Legend of Zelda: Breath of the Wild",
+                Platform = "Nintendo Switch",
+                Developer = "Nintendo EPD",
+                Publisher = "Nintendo"
+            },
+
+            new VideoGame
+            {
+                Id = 3,
+                Title = "Cyberpunk 2077",
+                Platform = "PC",
+                Developer = "CD Projekt Red",
+                Publisher = "CD Projekt"
             }
+
+          );
         }
     }
 }

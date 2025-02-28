@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using VideoGameApi.Database;
 using VideoGameApi.Entites;
 
 namespace VideoGameApi.Controllers
@@ -8,70 +10,80 @@ namespace VideoGameApi.Controllers
     [ApiController]
     public class VideoGameController : ControllerBase
     {
-        static private List<VideoGame> videoGames = new List<VideoGame>
+
+        private readonly VideoGameDbContext _context;
+
+        public VideoGameController(VideoGameDbContext context)
         {
-            new VideoGame
-            {
-                Id = 1,
-                Title = "Spider-Man 2",
-                Platform = "PS5",
-                Developer = "Insomniac Games",
-                Publisher = "Sony Interactive Entertainment"
-            },
+            _context = context;
+        }
+        //static private List<VideoGame> videoGames = new List<VideoGame>
+        //{
+        //    new VideoGame
+        //    {
+        //        Id = 1,
+        //        Title = "Spider-Man 2",
+        //        Platform = "PS5",
+        //        Developer = "Insomniac Games",
+        //        Publisher = "Sony Interactive Entertainment"
+        //    },
 
-            new VideoGame
-            {
-                Id = 2,
-                Title = "The Legend of Zelda: Breath of the Wild",
-                Platform = "Nintendo Switch",
-                Developer = "Nintendo EPD",
-                Publisher = "Nintendo"
-            },
+        //    new VideoGame
+        //    {
+        //        Id = 2,
+        //        Title = "The Legend of Zelda: Breath of the Wild",
+        //        Platform = "Nintendo Switch",
+        //        Developer = "Nintendo EPD",
+        //        Publisher = "Nintendo"
+        //    },
 
-            new VideoGame
-            {
-                Id = 3,
-                Title = "Cyberpunk 2077",
-                Platform = "PC",
-                Developer = "CD Projekt Red",
-                Publisher = "CD Projekt"
-            },
-        };
+        //    new VideoGame
+        //    {
+        //        Id = 3,
+        //        Title = "Cyberpunk 2077",
+        //        Platform = "PC",
+        //        Developer = "CD Projekt Red",
+        //        Publisher = "CD Projekt"
+        //    },
+        //};
 
         [HttpGet]
 
         //IEnumerable dediğimiz yapı liste içinde dönmemizi sağlar.
         //ActionResult ise dönüş tipidir. IActionResult'dan türetilmiştir. hata durumlarını kontrol etmemizi sağlar.
-        public ActionResult<List<VideoGame>> GetVideoGames()
+        public async Task<ActionResult<List<VideoGame>>> GetVideoGames()
         {
-            return Ok(videoGames);
+            return Ok(await _context.VideoGames.ToListAsync());
         }
 
-        [HttpGet]
+
         //Route ile urller belirleniyor.
         //id ile gelen parametreleri alıyoruz.
+        //Task ile asenkron çalışma sağlıyoruz. task dönüş tipidir.
+        [HttpGet]
         [Route("{id}")]
-        public ActionResult<VideoGame> GetVideoGameById(int id) 
+
+        public async Task<ActionResult<VideoGame>> GetVideoGameById(int id) 
         {
-            var videoGame = videoGames.FirstOrDefault(v => v.Id == id);
-            if (videoGame == null)
+            var game = await _context.VideoGames.FindAsync(id);
+            if (game == null)
             {
                 return NotFound();
             }
-            return Ok(videoGame);
+            return Ok(game);
         }
 
         [HttpPost]
 
-        public ActionResult<VideoGame> AddVideoGame(VideoGame newGame)
+        public async Task<ActionResult<VideoGame>> AddVideoGame(VideoGame newGame)
         {
             if (newGame == null)
             {
                 return BadRequest();
             }
 
-            newGame.Id = videoGames.Max(v => v.Id) + 1;
-            videoGames.Add(newGame);
+            _context.VideoGames.Add(newGame);
+            await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetVideoGameById), new { id = newGame.Id }, newGame);
 
         }
@@ -79,10 +91,10 @@ namespace VideoGameApi.Controllers
         [HttpPut("{id}")]
         
 
-        public IActionResult UpdateVideoGame(int id , VideoGame updatesGame)
+        public async Task<IActionResult> UpdateVideoGame(int id , VideoGame updatesGame)
 
         {
-            var game = videoGames.FirstOrDefault(v => v.Id == id);
+            var game = await _context.VideoGames.FindAsync(id);
 
             if (game == null)
             {
@@ -94,21 +106,24 @@ namespace VideoGameApi.Controllers
             game.Developer = updatesGame.Developer;
             game.Publisher = updatesGame.Publisher;
 
+            await _context.SaveChangesAsync();
+
             return NoContent();
         }
 
         [HttpDelete("{id}")]
 
-        public IActionResult DeleteVideoGame(int id)
+        public async Task<IActionResult> DeleteVideoGame(int id)
         {
-            var game = videoGames.FirstOrDefault(v => v.Id == id);
+            var game = await _context.VideoGames.FindAsync(id);
 
             if (game == null)
             {
                 return NotFound();
             }
 
-            videoGames.Remove(game);
+            _context.VideoGames.Remove(game);
+            await _context.SaveChangesAsync();
             return NoContent();
 
         }
