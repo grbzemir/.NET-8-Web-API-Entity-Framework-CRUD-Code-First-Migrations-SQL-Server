@@ -37,5 +37,24 @@ namespace VideoGameApi.Controllers
                 Publisher = "CD Projekt"
             },
         };
+
+        [HttpGet]
+
+        //IEnumerable dediğimiz yapı liste içinde dönmemizi sağlar.
+        //ActionResult ise dönüş tipidir. IActionResult'dan türetilmiştir. hata durumlarını kontrol etmemizi sağlar.
+        public ActionResult<List<VideoGame>> GetVideoGames()
+        {
+            return Ok(videoGames);
+        }
+
+        public ActionResult<VideoGame> GetVideoGameById(int id) 
+        {
+            var videoGame = videoGames.FirstOrDefault(v => v.Id == id);
+            if (videoGame == null)
+            {
+                return NotFound();
+            }
+            return Ok(videoGame);
+        }
     }
 }
