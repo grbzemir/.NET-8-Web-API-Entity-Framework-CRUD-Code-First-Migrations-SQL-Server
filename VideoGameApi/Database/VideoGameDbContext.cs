@@ -19,6 +19,8 @@ namespace VideoGameApi.Database
 
         public DbSet<VideoGame> VideoGames { get; set; }
         public DbSet<VideoGameDetails> VideoGameDetails { get; set; }
+        public DbSet<Publisher> Publishers { get; set; }
+        public DbSet<Developer> Developers { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -30,8 +32,7 @@ namespace VideoGameApi.Database
                 Id = 1,
                 Title = "Spider-Man 2",
                 Platform = "PS5",
-                Developer = "Insomniac Games",
-                Publisher = "Sony Interactive Entertainment"
+                
             },
 
             new VideoGame
@@ -39,8 +40,7 @@ namespace VideoGameApi.Database
                 Id = 2,
                 Title = "The Legend of Zelda: Breath of the Wild",
                 Platform = "Nintendo Switch",
-                Developer = "Nintendo EPD",
-                Publisher = "Nintendo"
+               
             },
 
             new VideoGame
@@ -48,8 +48,7 @@ namespace VideoGameApi.Database
                 Id = 3,
                 Title = "Cyberpunk 2077",
                 Platform = "PC",
-                Developer = "CD Projekt Red",
-                Publisher = "CD Projekt"
+               
             }
 
           );
