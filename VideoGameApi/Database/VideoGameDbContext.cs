@@ -18,6 +18,7 @@ namespace VideoGameApi.Database
 
 
         public DbSet<VideoGame> VideoGames { get; set; }
+        public DbSet<VideoGameDetails> VideoGameDetails { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
