@@ -110,6 +110,7 @@ namespace VideoGameApi.Controllers
 
             videoGames.Remove(game);
             return NoContent();
+
         }
     }
 }
