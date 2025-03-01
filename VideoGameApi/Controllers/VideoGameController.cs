@@ -81,6 +81,7 @@ namespace VideoGameApi.Controllers
             await _context.SaveChangesAsync();
 
             return Ok("Güncelleme işlemi başarılı."); 
+
         }
 
         [HttpDelete("{id}")]
@@ -101,6 +102,7 @@ namespace VideoGameApi.Controllers
             _context.VideoGames.Remove(game);
             await _context.SaveChangesAsync();
             return Ok("Silme işlemi başarılı.");
+
         }
     }
 }
