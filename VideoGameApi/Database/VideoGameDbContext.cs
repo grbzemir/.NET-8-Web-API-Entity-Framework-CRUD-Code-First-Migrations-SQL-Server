@@ -21,6 +21,7 @@ namespace VideoGameApi.Database
         public DbSet<VideoGameDetails> VideoGameDetails { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
         public DbSet<Developer> Developers { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
